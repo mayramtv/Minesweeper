@@ -1,5 +1,6 @@
 from tkinter import Button
 import random
+import settings 
 
 class Cell:
     all = []
@@ -19,7 +20,6 @@ class Cell:
             location,
             width=12,
             height=4,
-            text=f"({self.x}, {self.y})"
         )
         #passes a refernce to a function on a click event (left click)
         btn.bind("<Button-1>", self.left_clicked_actions)
@@ -28,8 +28,35 @@ class Cell:
         self.cell_btn_object = btn
 
     def left_clicked_actions(self, event):
-        print(event)
-        print("I am left clicked")
+        if self.is_mine:
+            self.show_mine()
+        else:
+            self.show_cell()
+
+    def get_cell_by_axis(self, x, y):
+        # Return a cell object based on the value of x, y
+        for cell in Cell.all:
+            if cell.x == x and cell.y == y:
+                return cell
+
+    def show_cell(self):
+        surrounded_cells = [
+            self.get_cell_by_axis(self.x - 1, self.y - 1),
+            self.get_cell_by_axis(self.x - 1, self.y),
+            self.get_cell_by_axis(self.x - 1, self.y + 1),
+            self.get_cell_by_axis(self.x , self.y - 1),
+            self.get_cell_by_axis(self.x + 1, self.y - 1),
+            self.get_cell_by_axis(self.x + 1, self.y),
+            self.get_cell_by_axis(self.x + 1, self.y + 1),
+            self.get_cell_by_axis(self.x, self.y + 1),
+        ]
+        # rewrites the array, but ignores the "none" values using a one line for loop
+        surrounded_cells = [cell for cell in surrounded_cells if cell is not None]
+        print(surrounded_cells)
+
+    def show_mine(self):
+        # A logic to interrupt the game with a loosing message
+        self.cell_btn_object.configure(bg='red')
 
     def right_clicked_actions(self, event):
         print(event)
@@ -40,7 +67,7 @@ class Cell:
         my_list = Cell.all
         # this method picks randomly 2 items fom the array
         picked_cells = random.sample(
-            my_list, 9
+            my_list, settings.MINES_COUNT
         )
         for picked_cell in picked_cells:
             picked_cell.is_mine = True
