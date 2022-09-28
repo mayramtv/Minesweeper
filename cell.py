@@ -1,5 +1,6 @@
 from tkinter import Button
 import random
+import settings 
 
 class Cell:
     all = []
@@ -19,7 +20,6 @@ class Cell:
             location,
             width=12,
             height=4,
-            text=f"({self.x}, {self.y})"
         )
         #passes a refernce to a function on a click event (left click)
         btn.bind("<Button-1>", self.left_clicked_actions)
@@ -28,8 +28,12 @@ class Cell:
         self.cell_btn_object = btn
 
     def left_clicked_actions(self, event):
-        print(event)
-        print("I am left clicked")
+        if self.is_mine:
+            self.show_mine()
+
+    def show_mine(self):
+        # A logic to interrupt the game with a loosing message
+        self.cell_btn_object.configure(bg='red')
 
     def right_clicked_actions(self, event):
         print(event)
@@ -40,7 +44,7 @@ class Cell:
         my_list = Cell.all
         # this method picks randomly 2 items fom the array
         picked_cells = random.sample(
-            my_list, 9
+            my_list, settings.MINES_COUNT
         )
         for picked_cell in picked_cells:
             picked_cell.is_mine = True
