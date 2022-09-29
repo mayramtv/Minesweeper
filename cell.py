@@ -38,9 +38,9 @@ class Cell:
         for cell in Cell.all:
             if cell.x == x and cell.y == y:
                 return cell
-
-    def show_cell(self):
-        surrounded_cells = [
+    @property
+    def surronded_cell(self):
+        cells = [
             self.get_cell_by_axis(self.x - 1, self.y - 1),
             self.get_cell_by_axis(self.x - 1, self.y),
             self.get_cell_by_axis(self.x - 1, self.y + 1),
@@ -51,8 +51,20 @@ class Cell:
             self.get_cell_by_axis(self.x, self.y + 1),
         ]
         # rewrites the array, but ignores the "none" values using a one line for loop
-        surrounded_cells = [cell for cell in surrounded_cells if cell is not None]
-        print(surrounded_cells)
+        cells = [cell for cell in cells if cell is not None]
+        return cells
+    
+    @property
+    def surronded_cells_mines_length(self):
+        #count the cells around the cell when clicked
+        counter = 0
+        for cell in self.surronded_cell:
+            if cell.is_mine:
+                counter += 1
+        return counter
+
+    def show_cell(self):
+        self.cell_btn_object.configure(text=self.surronded_cells_mines_length)
 
     def show_mine(self):
         # A logic to interrupt the game with a loosing message
