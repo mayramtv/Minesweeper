@@ -1,6 +1,7 @@
 
-WIDTH=1440
+WIDTH=900
 HEIGHT=720
 
 GRID_SIZE=6
-MINES_COUNT=(GRID_SIZE ** 2) // 4 # // ignores the reminder
+CELL_COUNT=GRID_SIZE ** 2
+MINES_COUNT=(CELL_COUNT) // 4 # // ignores the reminder
